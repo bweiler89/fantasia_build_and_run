@@ -6,7 +6,7 @@ First download Docker, this is needed to create the architecture (Ubuntu) needed
 
 I like the docker desktop GUI, so I use went to docs.docker.com for the mac install
 
-Once docker is installed, build a dockerfile so that you can build singularity within the container. This may take some work to get the packages and dependencies needed
+Once docker is installed, build a dockerfile so that you can build singularity within the container. This may take some work to get the all the packages and dependencies needed
 
 This was created using a Mac OS M1 chip, which requires Rosetta
 
