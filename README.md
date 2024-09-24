@@ -3,10 +3,13 @@ Full start to finish install and code to run Fantasia on a containerize Docker S
 
 ## Docker
 #First download Docker, this is needed to create the architecture (Ubuntu) needed for singularity. If using HPC, singularity does not need root priviledges and can be done without Docker, as long as the architecture is linux
+
 #I like the docker desktop GUI, so I use went to docs.docker.com for the mac install
 
 #Once docker is installed, build a dockerfile so that you can build singularity within the container. This may take some work to get the packages and dependencies needed
+
 #This was created using a Mac OS M1 chip, which requires Rosetta
+
 #Dockerfile.txt
 ```
 # Use an ARM64 base image
@@ -80,6 +83,7 @@ singularity --version
 ```
 
 #Great, now that singularity works and our build is complete, we can DL the image
+
 #Here we are pulling by a unique ID
 
 ```
