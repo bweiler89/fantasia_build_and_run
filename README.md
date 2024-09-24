@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/97a65952-0540-4338-95f1-5855deaf0a16)# Fantasia_build_and_run
+# Fantasia_build_and_run
 Full start to finish install and code to run Fantasia on a containerize Docker Singularity image using a Mac M1 chip
 
 ## Docker
