@@ -98,7 +98,7 @@ Here we are pulling by a unique ID
 singularity pull --arch amd64 library://gemma.martinezredondo/fantasia/fantasia:sha256.06f759be1e48bf4f72aed0d4bb4fe2fd6e05774bb58131b131f0128c7b0efc84
 ```
 
-This is a 10GB download, so be patient. 
+This is a 10GB download, so be patient. Also note that this downloads a unique ID, which mind was in the file name as fantasia_sha256.06f759be1e48bf4f72aed0d4bb4fe2fd6e05774bb58131b131f0128c7b0efc84.sif. I just renamed the file as fantasia.sif 
 
 ## [Fantasia](https://github.com/MetazoaPhylogenomicsLab/FANTASIA?tab=readme-ov-file)
 ![FANTASIA_pipeline](https://github.com/user-attachments/assets/c8d464ad-a3bd-4031-80cc-8c4d46917218)
