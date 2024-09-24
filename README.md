@@ -10,6 +10,14 @@ Once docker is installed, build a dockerfile so that you can build singularity w
 
 This was created using a Mac OS M1 chip, which requires Rosetta
 
+Go to the directory you wish to have this, I called mine singularity-docker
+
+```
+mkdir singularity-docker
+cd singularity-docker
+nano Dockerfile
+```
+
 ### Dockerfile.txt
 ```
 # Use an ARM64 base image
