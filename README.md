@@ -1,6 +1,9 @@
 # Fantasia_build_and_run
 Full start to finish install and code to run Fantasia on a containerize Docker Singularity image using a Mac M1 chip
 
+# Note: This is an attempt at using Rosetta, QEMU, for the ARM64 architecture to adapt it to Docker to create a container to run an image for the Fantasia Software. 
+## This workflow is in developement*
+
 ## Docker
 First download Docker, this is needed to create the architecture (Ubuntu) needed for singularity. If using HPC, singularity does not need root priviledges and can be done without Docker, as long as the architecture is linux
 
