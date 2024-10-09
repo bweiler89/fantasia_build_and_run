@@ -1,3 +1,8 @@
+### This is solely to be used as a resource for downloading and installing/running FANTASIA. 
+
+Bits of this code is taken directly from their Github, however I figured it usedful to document how I got it to work. Unfortunately, This is likely too resource heavy to be run on a standard work computer, therefore I would run this on a local HPC/Cluster.
+
+---
 # Downloading Fantasia
 
 ## Install from source from the [Fantasia Github](https://github.com/MetazoaPhylogenomicsLab/FANTASIA/tree/main?tab=readme-ov-file)
