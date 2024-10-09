@@ -1,128 +1,72 @@
-# Fantasia_build_and_run
-Full start to finish install and code to run Fantasia on a containerize Docker Singularity image using a Mac M1 chip
+# Downloading Fantasia
 
-# Note: This is an attempt at using Rosetta, QEMU, for the ARM64 architecture to adapt it to Docker to create a container to run an image for the Fantasia Software. 
-## This workflow is in developement*
+## Install from source from the [Fantasia Github](https://github.com/MetazoaPhylogenomicsLab/FANTASIA/tree/main?tab=readme-ov-file)
 
-## Docker
-First download Docker, this is needed to create the architecture (Ubuntu) needed for singularity. If using HPC, singularity does not need root priviledges and can be done without Docker, as long as the architecture is linux
+This is a large download ~13GB so make sure that you are connected via ethernet or have good wifi
 
-I like the docker desktop GUI, so I use went to docs.docker.com for the mac install
-
-Once docker is installed, build a dockerfile so that you can build singularity within the container. This may take some work to get the all the packages and dependencies needed
-
-This was created using a Mac OS M1 chip, which requires Rosetta
-
-Go to the directory you wish to have this, I called mine singularity-docker
+Once downloaded, scp it to your local cluster for analyses, this program takes a fair amount of ram
 
 ```
-mkdir singularity-docker
-cd singularity-docker
-nano Dockerfile
+scp -r FANTASIA.tar.gz user@super.computer.edu:/scratch/projects/path/to/directory
+```
+In the directory you want to decompress this file
+```
+tar -xvzf FANTASIA.tar.gz
 ```
 
-### Dockerfile.txt
-```
-# Use an ARM64 base image
-FROM arm64v8/ubuntu:22.04
+Note: This next section is pulled directly from their Github
 
-# Set the DEBIAN_FRONTEND to noninteractive to avoid prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
-
-# Install dependencies including FUSE headers and build tools
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libseccomp-dev \
-    pkg-config \
-    squashfs-tools \
-    cryptsetup \
-    curl \
-    git \
-    uuid-dev \
-    libgpgme-dev \
-    wget \
-    libssl-dev \
-    uidmap \
-    libglib2.0-dev \
-    libfuse-dev \
-    libfuse3-dev \
-    autoconf \
-    automake \
-    libtool
-
-# Install Go version 1.20.7 which <1.20.0 is required for singularity
-ENV GO_VERSION=1.20.7
-ENV OS=linux
-ENV ARCH=arm64
-RUN wget https://golang.org/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz && \
-    tar -C /usr/local -xzf go${GO_VERSION}.${OS}-${ARCH}.tar.gz && \
-    rm go${GO_VERSION}.${OS}-${ARCH}.tar.gz
-
-# Add Go to the PATH
-ENV PATH="/usr/local/go/bin:${PATH}"
-
-# Verify Go installation
-RUN go version
-
-# Download and install Singularity
-RUN export SINGULARITY_VERSION=4.0.2 && \
-    cd /tmp && \
-    wget https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce-${SINGULARITY_VERSION}.tar.gz && \
-    tar -xzf singularity-ce-${SINGULARITY_VERSION}.tar.gz && \
-    cd singularity-ce-${SINGULARITY_VERSION} && \
-    ./mconfig && \
-    make -C builddir && \
-    make -C builddir install
-
-# Set the entrypoint to Singularity
-ENTRYPOINT ["singularity"]
-```
-**Note: The entire build took about 10minutes after a plethora of failures and fatal crashes**
-
-## Singularity
-
-To enter the docker singularity container
+However, there were a lot of dependency issues, leading to failures along the way. Just read the outputs carefully and it will guide you in how to proceed. 
 
 ```
-docker run -it --entrypoint /bin/bash singularity-ce
+conda create --name gopredsim --file tf_conda_env_spec.txt python=3.9.13
+
+conda activate gopredsim #Check that everything is correctly installed
+
+conda install -c bioconda seqtk #Install seqtk
+
+# 3. Create the python environment and install the required packages
+
+#Note: make sure that you are executing the python from the conda environment. Otherwise, there may be version conflicts
+
+#If encountering any error saying that the version of the package is not available or not compatible with other package's version, modify requirements.txt and remove the version (it is indicated by "==XX.XX.X" and it will automatically find the one that is compatible with the rest of the packages). Be aware that the changing the version of some packages may affect the inference of the embeddings and the validity of results obtained.
+
+#Note2: to deactivate python environments, just type "deactivate"
+
+#General enviromment used for ProTT5 model (and could potentially be used for other models except SeqVec)
+
+python3 -m venv venv
+
+source venv/bin/activate
+
+pip install -r requirements.txt
+
+deactivate
+
+# 4. Change "/path-to-FANTASIA-folder/" to the correct path in the scripts for launching the program.
+
+FANTASIA_PATH=$(pwd) #You should be inside teh FANTASIA folder
+
+sed -i "s|/path-to-FANTASIA-folder|$FANTASIA_PATH|g" launch_*.sh
+
+# 5. Change "/path-to-FANTASIA-folder/" to the correct paths in the script to generate the config files required by the software.
+
+sed -i "s|/path-to-FANTASIA-folder|$FANTASIA_PATH|g" generate_gopredsim_input_files.sh
+
+# 6. GOPredSim can be run using CPUs or GPUs. CPUs is the default option selected in these scripts. However, GPUs can be used to increase the speed when dealing with large amounts of data. In clusters, make sure to select GPU nodes and to load the correspondent CUDA module when launching the pipeline. A sample script for executing the pipeline is included. Paths for execution and conda activation should be double checked.
+
+# 7. By default, ProtT5 model files is included in the GOPredSim/models folder. If those files are removed, GOPredSim will automatically download it in the user .cache. If GOPredSim is used in a cluster, this download is user-specific, and, as files are quite big in some cases, it may rise an error if not enough space. To add more models, download files using the links found in /GOPredSim/venv/lib/python3.9/site-packages/bio_embeddings/utilities/defaults.yml and put them in the GOPredSim/models folder. In addition, this information must be added to the configuration files for the embedding part (.yml files) as explained in https://github.com/sacdallago/bio_embeddings/issues/114.
+
+# 8. The folder includes two additional scripts to convert the format on the output to the input of topGO and to collapse GO annotation of several isoforms into GO annotation per gene. Additional information on how to run the pipeline and these steps can be found on GitHub (https://github.com/MetazoaPhylogenomicsLab/FANTASIA).
+
 ```
 
-Once inside the container, check singularity is working
+# Using Fantasia
 
-```
-singularity --version
-```
-
-Great, now that singularity works and our build is complete, we can DL the image
-
-Here we are pulling by a unique ID
-
-```
-singularity pull --arch amd64 library://gemma.martinezredondo/fantasia/fantasia:sha256.06f759be1e48bf4f72aed0d4bb4fe2fd6e05774bb58131b131f0128c7b0efc84
-```
-
-This is a 10GB download, so be patient. Also note that this downloads a unique ID, which mind was in the file name as fantasia_sha256.06f759be1e48bf4f72aed0d4bb4fe2fd6e05774bb58131b131f0128c7b0efc84.sif. I just renamed the file as fantasia.sif 
-
-## [Fantasia](https://github.com/MetazoaPhylogenomicsLab/FANTASIA?tab=readme-ov-file)
-![FANTASIA_pipeline](https://github.com/user-attachments/assets/c8d464ad-a3bd-4031-80cc-8c4d46917218)
-
-FANTASIA (Functional ANnoTAtion based on embedding space SImilArity) is a pipeline for annotating GO terms in protein sequence files using GOPredSim (to know more) with the protein language model ProtT5. FANTASIA takes as input a proteome file (either the longest isoform or the full set of isoforms for all genes), removes identical sequences using CD-HIT (ref) and sequences longer than 5000 amino acids (due to a length constraint in the model), and executes GOPredSim-ProtT5 for all sequences. Then, it converts the standard GOPredSim output file to the input file format for topGO (ref) to facilitate its application in a wider biological workflow.
-
-Here is the syntax of FANTASIA from the vignette and also some of the flags you can use
-```
-Syntax: ./fantasia --infile protein.fasta [--outpath output_path] [--allisoforms gene_isoform_conversion.txt] [--keepintermediate]
-options:
--i/--infile           Input protein fasta file.
--h/--help             Print this Help.
--o/--outpath          (Optional) Output directory. If not provided, input file directory will be used.
--a/--allisoforms      (Optional) Tab-separated conversion file specifying the correspondance between gene and isoform IDs for obtaining a per-gene annotation using all isoforms.
--p/--prefix           (Optional) Prefix to add to output folders and files (e.g. the species code). If not provided, input file name will be used.
-```
-
-### Using Fantasia
 Fantasia uses an input protein sequence file and annotates GO terms using GOPredSim. 
+![FANTASIA_pipeline](https://github.com/user-attachments/assets/bc62f7b9-b9ec-4446-8ed4-6b9c21028956)
 
-#Filtered (using transdecoder) protein file should end in .pep and should look something like this
+Filtered (using transdecoder) protein file should end in .pep and should look something like this
 ```
 >TRINITY_DN10008_c0_g1_i1.p1 TRINITY_DN10008_c0_g1~~TRINITY_DN10008_c0_g1_i1.p1  ORF type:complete len:264 (-),score=53.73 TRINITY_DN10008_c0_g1_i1:64-747(-)
 MTADTMTAATLPVASSTWVSPSVQKWTFHQPSDGDGHKGRNLTWSEALELMENSPRFREM
@@ -141,10 +85,80 @@ VVFKVEGREIPIVHRVLKIHEKKDGAIRFLTKGDNNSVDDRGLYAPGQLWLQRKDVVGRA
 RGFVPYVGMVTILMNDYPKFKYAILVALGAFVLLHRE
 ```
 
-Using our protein fasta file, we can run it in Fantasia to predict annotations, which will produce GO terms. This outfile can supplement our eggnogg mapper file for any proteins that did not have any associated GO terms
+Fantasia uses GOPredSim with the protein language model ProtT5 to achieve GO terms used in downstream analyses. 
 
+In order to do this correctly, I needed to build a job script, which would run the .sh
+
+#pstr_generate_gopredsim_input_files.job
 ```
-./fantasia --infile Trinity_filtered.fasta.transdecoder.pep [--outpath output_path] [--allisoforms gene_isoform_conversion.txt] [--keepintermediate]
+#!/bin/bash
+#BSUB -J pstr_generate_gopredsim_input_files
+#BSUB -e pstr_generate_gopredsim_input_files.err
+#BSUB -o pstr_generate_gopredsim_input_files.out
+#BSUB -q bigmem #this is the queue, we need bigmem for some of this work
+#BSUB -P coralma #this is my personal project, use yours
+#BSUB -n 8
+#BSUB -R "rusage[mem=10000]"
+#BSUB -B
+#BSUB -W 120:00
+#BSUB -N
+#BSUB -u user@school.edu #input your user ID
+
+# Change to the working directory
+cd /scratch/projects/coralma/fantasia/FANTASIA
+
+# Define variables for paths and options
+PEP_FILE="Trinity_filtered.fasta.transdecoder.pep"
+OUTPUT_PATH="/scratch/projects/coralma/fantasia/FANTASIA/gopredsim_output/"
+PREFIX="pstr"  # Customize this as needed
+CONFIG_PATH="/scratch/projects/coralma/fantasia/FANTASIA/"  # Current directory; change if you have a specific config path
+MODE="cpu"  # Set to "gpu" if you want to use GPU
+
+# Create the output directory if it doesn't exist
+mkdir -p $OUTPUT_PATH
+
+# Generate GOPredSim input files
+echo "Generating GOPredSim input files..."
+./generate_gopredsim_input_files.sh -i $PEP_FILE -o $OUTPUT_PATH -c $CONFIG_PATH -p -m $MODE --prefix pstr
 ```
 
+This execution uses CD-HIT to remove identical sequences and any seqs longer than 5000 amino acids (model constraint). The output files should be:
+1. [filt_fasta]_cdhit100_5k_removed.pep
+2. [filt_fasta]_cdhit100_headers_larger5k.txt
+3. [filt_fasta]_cdhit100_headers_smaller5k.txt
+4. [filt_fasta]_cdhit100.pep
+5. [filt_fasta]_cdhit100.pep.clstr
+6. [filt_fasta]_cdhit100_seqs_larger5k.txt
+
+This step also produces a config_files directory with two sub directories, embeddings and gopredsim. In embeddings and gopredsim, you should have a [PREFIX]_prott5.yml
+
+Your job script will also shoot out an .err file (sources of error if there are any) and an .out file (outcome of the job).
+
+Next, we want to actually run the launch_gopredsim_pipeline.sh, so lets build a job script
+```
+#!/bin/bash
+#BSUB -J pstr_launch_gopredsim_pipeline
+#BSUB -e pstr_launch_gopredsim_pipeline.err
+#BSUB -o pstr_launch_gopredsim_pipeline.out
+#BSUB -q bigmem #this is the queue, we need bigmem for some of this work
+#BSUB -P coralma #this is my personal project, use yours
+#BSUB -n 8
+#BSUB -R "rusage[mem=10000]"
+#BSUB -B
+#BSUB -W 120:00
+#BSUB -N
+#BSUB -u user@school.edu #input your user ID
+
+# Change to the working directory
+cd /scratch/projects/coralma/fantasia/FANTASIA
+
+# Load conda and activate the environment
+source /nethome/baw117/miniconda3/etc/profile.d/conda.sh
+conda activate gopredsim
+
+# Run the GOPredSim pipeline with the correct path to the config file
+./launch_gopredsim_pipeline.sh -c /scratch/projects/coralma/fantasia/FANTASIA/ -x pstr -m prott5 -o /scratch/projects/coralma/fantasia/F$
+```
+
+This step is a doozie, I gave it roughly 80GB of RAM and it achieved 1% (250/23787) in an hour.  
 
