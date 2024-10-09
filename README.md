@@ -105,13 +105,13 @@ In order to do this correctly, I needed to build a job script, which would run t
 #BSUB -u user@school.edu #input your user ID
 
 # Change to the working directory
-cd /scratch/projects/coralma/fantasia/FANTASIA
+cd /scratch/projects/path/to/directory/FANTASIA
 
 # Define variables for paths and options
 PEP_FILE="Trinity_filtered.fasta.transdecoder.pep"
-OUTPUT_PATH="/scratch/projects/coralma/fantasia/FANTASIA/gopredsim_output/"
+OUTPUT_PATH="/scratch/projects/path/to/directory/FANTASIA/gopredsim_output/"
 PREFIX="pstr"  # Customize this as needed
-CONFIG_PATH="/scratch/projects/coralma/fantasia/FANTASIA/"  # Current directory; change if you have a specific config path
+CONFIG_PATH="/scratch/projects/path/to/directory/FANTASIA/"  # Current directory; change if you have a specific config path
 MODE="cpu"  # Set to "gpu" if you want to use GPU
 
 # Create the output directory if it doesn't exist
@@ -150,15 +150,14 @@ Next, we want to actually run the launch_gopredsim_pipeline.sh, so lets build a 
 #BSUB -u user@school.edu #input your user ID
 
 # Change to the working directory
-cd /scratch/projects/coralma/fantasia/FANTASIA
+cd /scratch/projects/path/to/directory/FANTASIA
 
-# Load conda and activate the environment
-source /nethome/baw117/miniconda3/etc/profile.d/conda.sh
+# Load conda and activate the environment, change the source according to where conda.sh is (alternatively you can activate the conda env before submitting the script and omit this step)
+source /nethome/user/miniconda3/etc/profile.d/conda.sh
 conda activate gopredsim
 
 # Run the GOPredSim pipeline with the correct path to the config file
-./launch_gopredsim_pipeline.sh -c /scratch/projects/coralma/fantasia/FANTASIA/ -x pstr -m prott5 -o /scratch/projects/coralma/fantasia/F$
+./launch_gopredsim_pipeline.sh -c /scratch/projects/path/to/directory/FANTASIA/ -x pstr -m prott5 -o /scratch/projects/cpath/to/directory/FNTASIA/gopredsim_output
 ```
 
-This step is a doozie, I gave it roughly 80GB of RAM and it achieved 1% (250/23787) in an hour.  
-
+This step is a doozie, I gave it roughly 80GB of RAM and it achieved 1% (337/23787) in an hour from submit.  
