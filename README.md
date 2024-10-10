@@ -33,7 +33,7 @@ Step 3: Transfer GO terms from the lookup set to your target proteins based on s
 Step 4: Convert the output into formats (like topGO) suitable for further downstream RNAseq analyses.
 
 
-## Downloading Fantasia
+# <p align="center">Downloading Fantasia</p>
 
 ### Install from source from the [Fantasia Github](https://github.com/MetazoaPhylogenomicsLab/FANTASIA/tree/main?tab=readme-ov-file)
 
@@ -96,7 +96,7 @@ sed -i "s|/path-to-FANTASIA-folder|$FANTASIA_PATH|g" generate_gopredsim_input_fi
 
 ```
 
-# Using Fantasia
+# <p align="center">Using Fantasia</p>
 
 Fantasia uses an input protein sequence file and annotates GO terms using GOPredSim. 
 ![FANTASIA_pipeline](https://github.com/user-attachments/assets/bc62f7b9-b9ec-4446-8ed4-6b9c21028956)
