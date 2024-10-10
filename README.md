@@ -166,4 +166,9 @@ conda activate gopredsim
 ./launch_gopredsim_pipeline.sh -c /scratch/projects/path/to/directory/FANTASIA/ -x pstr -m prott5 -o /scratch/projects/cpath/to/directory/FNTASIA/gopredsim_output
 ```
 
-This step is a doozie, I gave it roughly 80GB of RAM and it achieved 1% (337/23787) in an hour from submit.  
+This job took roughly 12 hours to run with 80GB provided, though it only used ~25GB.
+
+I got an error because the pipeline itself is hardcoded to access python from /opt/conda/envs/gopredsim/bin/python, where it was actually downloaded to /nethome/user/miniconda3/envs/gopredsim/bin/python
+
+
+
