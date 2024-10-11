@@ -25,12 +25,15 @@ In FANTASIA, ProtT5 is used to generate these embeddings, and GOPredSim transfer
 
 Then, the distance between a target protein and its nearest neighbors (in the embedding space) is converted into a similarity score. Proteins that are closer to the target protein provide more reliable predictions. If a GO term is annotated to multiple neighbors of a target protein, it gets a higher reliability score. This is because multiple sources agreeing on the same function make the prediction more trustworthy.
 
-Summary of the Fantasia Pipeline:
+## Summary of the Fantasia Pipeline:
+
 Input: Your protein sequences (filtered through CD-HIT).
-Step 1: Use ProtT5 to create embeddings for these sequences.
-Step 2: GOPredSim compares these embeddings to known proteins (lookup set) with GO annotations.
-Step 3: Transfer GO terms from the lookup set to your target proteins based on similarity.
-Step 4: Convert the output into formats (like topGO) suitable for further downstream RNAseq analyses.
+
+Steps:
+1. Use ProtT5 to create embeddings for these sequences.
+2. GOPredSim compares these embeddings to known proteins (reference DB) with GO annotations.
+3. Transfer GO terms from the reference DB to your target proteins based on similarity.
+4. Convert the output into formats (like topGO) suitable for further downstream RNAseq analyses.
 
 
 # <p align="center">Downloading Fantasia</p>
