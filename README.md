@@ -229,8 +229,15 @@ This job took roughly 12 hours to run with 80GB provided, though it only used ~3
 3. CCO often falls in between MFO and BPO in terms of prediction accuracy. Cellular component predictions, while still complex, tend to have fewer hierarchical dependencies than BPO, making them slightly easier to predict than biological processes​.
 
 ## Helpful information
-After running this on my data, I found that it added 79,610 unique go terms to my transcripts. 
+After running this on my data, I found that it added 79,610 unique go terms to my transcripts, given 24,750 long orfs protein fastas
 
 | # eggNOG Go Terms | # Fantasia Go Terms | # Unique eggNOG GOs | # Unique Fantasia GOs | # Shared GOs |
 |-------------------|---------------------|---------------------|-----------------------|--------------|
 | 630655            | 88389               | 621,896             | 79,610                | 8779         |
+
+## Closing remarks
+-eggNOG-mapper uses orthology-based functional annotation, relying on evolutionary relationships between genes.
+
+-GOpredsim uses deep learning based on protein sequence (or other structural features we cannot see), not relying on orthology but functionally related proteins.
+
+While it seems that GOpredsim is producing less transcripts that are annotated, it is because GOpredsim is using embedding space which uses deep learning to assign annotations based on protein sequence and structural patterns and not orthology (as eggNOG-mapper does). This could very well be a supplemental contribution to RNAseq analyses to provide further annotations to transcripts previously unnannotated.
