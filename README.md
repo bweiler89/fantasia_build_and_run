@@ -173,6 +173,17 @@ This step also produces a config_files directory with two sub directories, embed
 Your job script will also shoot out an .err file (sources of error if there are any) and an .out file (outcome of the job).
 
 Next, we want to actually run the launch_gopredsim_pipeline.sh, so lets build a job script
+
+### Errors you may encounter
+
+1. The pipeline itself is hardcoded to access python from /opt/conda/envs/gopredsim/bin/python, where it was actually downloaded to /nethome/user/miniconda3/envs/gopredsim/bin/python
+2. Packages h5py and sklearn (scikit-learn) were not in my env and needed, consider installing prior to running
+3. The launch_gopredsim_pipeline.sh has conda activate gopredsim in the script, however if you run conda activate gopredsim before running the job it is redundant and causes the script to exit, so hash out both #conda activate gopredsim and #conda deactivate gopredsim at the end
+```
+conda install conda-forge::h5py #this worked over other methods
+pip install scikit-learn #conda did not work to install this package
+```
+
 ```
 #!/bin/bash
 #BSUB -J pstr_launch_gopredsim_pipeline
@@ -198,9 +209,17 @@ conda activate gopredsim
 ./launch_gopredsim_pipeline.sh -c /scratch/projects/path/to/directory/FANTASIA/ -x pstr -m prott5 -o /scratch/projects/cpath/to/directory/FNTASIA/gopredsim_output
 ```
 
-This job took roughly 12 hours to run with 80GB provided, though it only used ~25GB.
+This job took roughly 12 hours to run with 80GB provided, though it only used ~34GB.
 
-I got an error because the pipeline itself is hardcoded to access python from /opt/conda/envs/gopredsim/bin/python, where it was actually downloaded to /nethome/user/miniconda3/envs/gopredsim/bin/python
+### The output files are: 
 
-
+1. gopredsim_{prefix}_prott5_1_bpo.txt
+2. input_parameters_file.yml
+3. {prefix}_prott5_embeddings/ #this is a folder containing input_parameters_file.yml  ouput_parameters_file.yml  reduced_embeddings_file.h5
+4. gopredsim_{prefix}_prott5_1_cco.txt
+5. mapping_file.csv
+6. remapped_sequences_file.fasta
+7. gopredsim_{prefix}_prott5_1_mfo.txt
+8. ouput_parameters_file.yml
+9. sequences_file.fasta
 
