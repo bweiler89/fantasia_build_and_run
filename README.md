@@ -177,7 +177,7 @@ Next, we want to actually run the launch_gopredsim_pipeline.sh, so lets build a 
 ### Errors you may encounter
 
 1. The pipeline itself is hardcoded to access python from /opt/conda/envs/gopredsim/bin/python, where it was actually downloaded to /nethome/user/miniconda3/envs/gopredsim/bin/python
-2. Packages h5py and sklearn (scikit-learn) were not in my env and needed, consider installing prior to running
+2. Packages h5py, sklearn (scikit-learn), numpy, and pathlib are needed prior to running this next step
 3. The launch_gopredsim_pipeline.sh has conda activate gopredsim in the script, however if you run conda activate gopredsim before running the job it is redundant and causes the script to exit, so hash out both #conda activate gopredsim and #conda deactivate gopredsim at the end
 ```
 conda install conda-forge::h5py #this worked over other methods
