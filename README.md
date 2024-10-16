@@ -214,14 +214,14 @@ This job took roughly 12 hours to run with 80GB provided, though it only used ~3
 ### The output files are: 
 
 1. gopredsim_{prefix}_prott5_1_bpo.txt #Biological Process Ontology
-2. input_parameters_file.yml
-3. {prefix}_prott5_embeddings/ #this is a folder containing input_parameters_file.yml  ouput_parameters_file.yml  reduced_embeddings_file.h5
-4. gopredsim_{prefix}_prott5_1_cco.txt #Cellular Components Ontology (or subcellular localizations)
-5. mapping_file.csv
-6. remapped_sequences_file.fasta
-7. gopredsim_{prefix}_prott5_1_mfo.txt #Molecular Function Ontology
-8. ouput_parameters_file.yml
-9. sequences_file.fasta
+2. gopredsim_{prefix}_prott5_1_cco.txt #Cellular Components Ontology (or subcellular localizations)
+3. gopredsim_{prefix}_prott5_1_mfo.txt #Molecular Function Ontology
+4. input_parameters_file.yml
+5. ouput_parameters_file.yml
+6. mapping_file.csv
+7. sequences_file.fasta
+8. remapped_sequences_file.fasta
+9. {prefix}_prott5_embeddings/ #this is a folder containing input_parameters_file.yml  ouput_parameters_file.yml  reduced_embeddings_file.h5
 
 ## Note on the three ontologies
 1. MFO predictions are often more straightforward, as they deal with specific molecular activities of proteins that are more directly tied to sequence features​.
