@@ -234,5 +234,3 @@ After running this on my data, I found that it added 79,610 unique go terms to m
 | # eggNOG Go Terms | # Fantasia Go Terms | # Unique eggNOG GOs | # Unique Fantasia GOs | # Shared GOs |
 |-------------------|---------------------|---------------------|-----------------------|--------------|
 | 630655            | 88389               | 621,896             | 79,610                | 8779         |
-|                   |                     |                     |                       |              |
-|                   |                     |                     |                       |              |
